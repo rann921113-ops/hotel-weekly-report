@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>호텔 마케팅 주간 인텔리전스</title>
+<meta property="og:title" content="호텔 마케팅 주간 인텔리전스">
+<meta property="og:description" content="인천·영종도 호텔 시장 동향 주간 브리핑 — 뉴스, 경쟁사 프로모션, OTA 최저가를 한눈에">
+<meta property="og:type" content="website">
+<style>
+  :root {
+    --primary: #1a4a7a;
+    --primary-light: #2d6bb0;
+    --primary-xlight: #e8f0f9;
+    --accent: #c8922a;
+    --accent-light: #fdf3e0;
+    --green: #2e7d4f;
+    --green-light: #f0fff4;
+    --red: #c0392b;
+    --red-light: #fff1f0;
+    --gray-50: #f9fafb;
+    --gray-100: #f3f4f6;
+    --gray-200: #e5e7eb;
+    --gray-300: #d1d5db;
+    --gray-500: #6b7280;
+    --gray-700: #374151;
+    --gray-900: #111827;
+    --white: #ffffff;
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.10);
+    --radius: 10px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { width: 100%; overflow-x: hidden; }
+  body {
+    font-family: 'Apple SD Gothic Neo','Noto Sans KR','Malgun Gothic',sans-serif;
+    background: var(--gray-100);
+    color: var(--gray-900);
+    line-height: 1.6;
+    min-height: 100vh;
+    width: 100%;
+    overflow-x: hidden;
+  }
+  .table-scroll { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .header {
+    background: var(--white);
+    border-bottom: 3px solid var(--primary);
+    padding: 18px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: var(--shadow-md);
+    width: 100%;
+  }
+  .header > * { min-width: 0; }
+  .header-badge {
+    background: var(--primary);
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  .header-title { font-size: 18px; font-weight: 700; color: var(--primary); }
+  .week-selector-wrap { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; min-width: 0; }
+  .week-selector-wrap label { font-size: 13px; font-weight: 600; color: var(--gray-700); }
+  #weekSelect {
+    appearance: none;
+    -webkit-appearance: none;
+    background: var(--primary-xlight) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%231a4a7a' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") no-repeat right 10px center;
+    border: 2px solid var(--primary-light);
+    border-radius: 8px;
+    color: var(--primary);
+    font-size: 13px;
+    font-weight: 700;
+    padding: 8px 32px 8px 12px;
+    cursor: pointer;
+    min-width: 200px;
+    transition: border-color 0.2s;
+  }
+  #weekSelect:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(26,74,122,0.15); }
+  .header-right { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; position: relative; }
+  .mobile-share-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-size: 12.5px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .mobile-share-btn:hover { background: var(--primary-light); }
+  .mobile-share-btn svg { width: 14px; height: 14px; flex-shrink: 0; }
+  .copy-toast {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    background: var(--gray-900);
+    color: #fff;
+    font-size: 12px;
+    padding: 6px 12px;
+    border-radius: 6px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-4px);
+    transition: opacity 0.2s, transform 0.2s;
+    z-index: 200;
+  }
+  .copy-toast.show { opacity: 1; transform: translateY(0); }
+  .meta-bar {
+    background: var(--primary-xlight);
+    border-bottom: 1px solid var(--gray-200);
+    padding: 10px 32px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  .meta-item { font-size: 12px; color: var(--gray-700); }
+  .meta-item strong { color: var(--primary); }
+  .highlight-bar {
+    background: linear-gradient(90deg, var(--primary) 0%, #2d6bb0 100%);
+    color: white;
+    padding: 10px 32px;
+    font-size: 12px;
+    line-height: 1.5;
+  }
+  .highlight-bar span { opacity: 0.8; margin-right: 6px; }
+  .main { max-width: 1100px; margin: 0 auto; padding: 28px 20px 60px; }
+  .section-block { margin-bottom: 28px; }
+  .section-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--primary);
+    padding: 14px 18px;
+    background: var(--white);
+    border-radius: var(--radius) var(--radius) 0 0;
+    border: 1px solid var(--gray-200);
+    border-bottom: 2px solid var(--primary);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .section-body {
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-top: none;
+    border-radius: 0 0 var(--radius) var(--radius);
+    overflow: hidden;
+  }
+  .news-group-header {
+    background: var(--gray-50);
+    border-bottom: 1px solid var(--gray-200);
+    padding: 10px 18px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--gray-700);
+    letter-spacing: 0.04em;
+  }
+  .news-item {
+    padding: 16px 18px;
+    border-bottom: 1px solid var(--gray-100);
+    display: grid;
+    grid-template-columns: 48px 1fr;
+    gap: 12px;
+    align-items: start;
+    transition: background 0.15s;
+  }
+  .news-item:last-child { border-bottom: none; }
+  .news-item:hover { background: var(--gray-50); }
+  .news-emoji {
+    width: 40px;
+    height: 40px;
+    background: var(--primary-xlight);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .news-cat { font-size: 10px; font-weight: 700; color: var(--primary-light); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 3px; }
+  .news-headline { font-size: 14px; font-weight: 700; color: var(--gray-900); margin-bottom: 4px; line-height: 1.4; }
+  .news-headline a { color: inherit; text-decoration: none; }
+  .news-headline a:hover { color: var(--primary-light); text-decoration: underline; }
+  .news-source { font-size: 11px; color: var(--gray-500); margin-bottom: 6px; }
+  .news-summary { font-size: 13px; color: var(--gray-700); line-height: 1.55; margin-bottom: 8px; }
+  .news-insight {
+    background: var(--accent-light);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 4px 4px 0;
+    padding: 8px 12px;
+    font-size: 12px;
+    color: #7a5a1a;
+    line-height: 1.5;
+  }
+  .hotel-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(300px,1fr)); }
+  .hotel-card {
+    padding: 16px 18px;
+    border-right: 1px solid var(--gray-100);
+    border-bottom: 1px solid var(--gray-100);
+    transition: background 0.15s;
+  }
+  .hotel-card:hover { background: var(--gray-50); }
+  .hotel-name { font-size: 13px; font-weight: 700; color: var(--primary); margin-bottom: 8px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .hotel-name-badge { font-size: 10px; background: var(--primary-xlight); color: var(--primary-light); padding: 2px 6px; border-radius: 4px; font-weight: 600; }
+  .promo-tag { display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 4px; margin-right: 4px; margin-bottom: 4px; }
+  .tag-sale { background: #fff1f0; color: #c0392b; }
+  .tag-package { background: #f0f7ff; color: #1a5fa8; }
+  .tag-event { background: #f0fff4; color: #2e7d4f; }
+  .tag-new { background: #fff8e1; color: #e65100; border: 1px solid #ffcc80; }
+  .promo-title { font-size: 13px; font-weight: 600; color: var(--gray-900); margin: 6px 0 4px; line-height: 1.4; }
+  .promo-desc { font-size: 12px; color: var(--gray-700); line-height: 1.5; }
+  .promo-period { font-size: 11px; color: var(--gray-500); margin-top: 6px; }
+  .no-promo { font-size: 12px; color: var(--gray-500); font-style: italic; }
+  .price-table { width: 100%; border-collapse: collapse; }
+  .price-table th { background: var(--primary); color: white; font-size: 12px; font-weight: 600; padding: 10px 16px; text-align: left; }
+  .price-table td { padding: 12px 16px; font-size: 13px; border-bottom: 1px solid var(--gray-100); vertical-align: middle; }
+  .price-table tr:last-child td { border-bottom: none; }
+  .price-table tr:hover td { background: var(--gray-50); }
+  .price-amount { font-size: 15px; font-weight: 700; color: var(--primary); }
+  .price-amount.official-cheaper { color: var(--green); }
+  .price-room { font-size: 11px; color: var(--gray-500); margin-top: 2px; }
+  .price-source { font-size: 11px; color: var(--gray-500); }
+  .price-official { font-size: 12px; color: var(--gray-700); }
+  .price-official-badge { font-size: 10px; background: var(--green-light); color: var(--green); padding: 1px 6px; border-radius: 4px; font-weight: 700; margin-left: 4px; }
+  .price-na { font-size: 12px; color: var(--gray-500); font-style: italic; }
+  .ota-note { padding: 12px 16px; font-size: 11.5px; color: var(--gray-500); background: var(--gray-50); border-top: 1px solid var(--gray-200); line-height: 1.6; }
+  .js-notice { background: var(--gray-50); border: 1px dashed var(--gray-300); border-radius: 4px; padding: 4px 8px; font-size: 11px; color: var(--gray-500); display: inline-block; margin-top: 6px; }
+  /* 호텔 이벤트 4열 카드 */
+  .event-card-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    padding: 16px;
+  }
+  .event-card {
+    background: var(--gray-50);
+    border: 1px solid var(--gray-200);
+    border-radius: 8px;
+    padding: 14px 13px;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    transition: box-shadow 0.15s, background 0.15s;
+  }
+  .event-card:hover { box-shadow: var(--shadow-md); background: var(--white); }
+  .event-card-headline { font-size: 12px; font-weight: 700; color: var(--gray-900); line-height: 1.45; }
+  .event-card-headline a { color: inherit; text-decoration: none; }
+  .event-card-headline a:hover { color: var(--primary-light); text-decoration: underline; }
+  .event-card-meta { font-size: 10px; color: var(--gray-500); margin-top: 2px; }
+  .event-card-publisher { font-weight: 600; }
+  .event-card-date { color: var(--gray-500); }
+  .event-card-summary { font-size: 11px; color: var(--gray-700); line-height: 1.55; margin-top: auto; }
+  @media (max-width: 900px) { .event-card-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 480px) { .event-card-grid { grid-template-columns: 1fr; } }
+  .footer { text-align: center; padding: 20px; font-size: 11px; color: var(--gray-500); border-top: 1px solid var(--gray-200); background: var(--white); margin-top: 16px; }
+  @media (max-width: 640px) {
+    .header { padding: 14px 16px; }
+    .meta-bar, .highlight-bar { padding: 10px 16px; }
+    .main { padding: 16px 10px 40px; }
+    .hotel-grid { grid-template-columns: 1fr; }
+    .news-item { grid-template-columns: 36px 1fr; }
+    #weekSelect { min-width: 160px; }
+    .mobile-share-btn span { display: none; }
+    .mobile-share-btn { padding: 8px; }
+    /* 모바일 전용 UI: OTA 최저가 표 → 카드형으로 전환 */
+    .price-table thead { display: none; }
+    .price-table, .price-table tbody, .price-table tr, .price-table td { display: block; width: 100%; }
+    .price-table tr {
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius);
+      margin: 0 0 10px;
+      padding: 12px 14px;
+      box-shadow: var(--shadow-md);
+    }
+    .price-table tr:last-child { margin-bottom: 0; }
+    .price-table td { padding: 4px 0; border-bottom: none; }
+    .price-table td[data-label]::before {
+      content: attr(data-label);
+      display: block;
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--gray-500);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 2px;
+    }
+    .table-scroll { overflow-x: visible; }
+    /* 모바일 전용 UI: 뉴스 카드 그리드 1열 + 요약 축약 */
+    .event-card-grid { padding: 12px; gap: 10px; }
+    .hotel-card { border-right: none; }
+  }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div style="display:flex;align-items:center;gap:14px;">
+    <div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span class="header-badge">Intelligence</span>
+        <span class="header-title">호텔 마케팅 주간 인텔리전스</span>
+      </div>
+      <div style="font-size:12px;color:var(--gray-500);margin-top:2px;">인천·영종도 호텔 시장 동향 주간 브리핑</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="week-selector-wrap">
+      <label for="weekSelect">기간 선택</label>
+      <select id="weekSelect">
+        <option value="0">2026년 6월 1주차 (6/1~6/7)</option>
+        <option value="1">2026년 6월 2주차 (6/8~6/14)</option>
+        <option value="2">2026년 6월 3주차 (6/15~6/21)</option>
+        <option value="3">2026년 7월 1주차 (6/29~7/5)</option>
+        <option value="4" selected>2026년 7월 2주차 (7/6~7/12)</option>
+      </select>
+    </div>
+    <button type="button" id="mobileShareBtn" class="mobile-share-btn" onclick="copyMobileLink()" title="모바일 버전 링크 복사">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.6" y1="10.6" x2="15.4" y2="6.4"></line><line x1="8.6" y1="13.4" x2="15.4" y2="17.6"></line></svg>
+      <span id="mobileShareLabel">모바일 링크 복사</span>
+    </button>
+    <div class="copy-toast" id="copyToast">링크가 복사되었습니다 ✓</div>
+  </div>
+</header>
+
+<div class="meta-bar" id="metaBar"></div>
+
+<main class="main">
+  <div class="section-block">
+    <div class="section-title"><span>📰</span> 주간 뉴스 브리핑</div>
+    <div class="section-body" id="newsSection"></div>
+  </div>
+  <div class="section-block">
+    <div class="section-title"><span>🏨</span> 경쟁사 프로모션 현황 <span style="font-size:11px;font-weight:400;color:var(--gray-500);margin-left:6px;">NEW = 지난주 대비 신규</span></div>
+    <div class="section-body"><div class="hotel-grid" id="promoSection"></div></div>
+  </div>
+  <div class="section-block">
+    <div class="section-title">
+      <span>💰</span> OTA 최저가 근황
+      <span id="priceSubtitle" style="font-size:12px;font-weight:400;color:var(--gray-500);margin-left:8px;"></span>
+    </div>
+    <div class="section-body">
+      <div class="table-scroll">
+      <table class="price-table">
+        <thead><tr><th>호텔</th><th>최저가 / 객실</th><th>채널</th></tr></thead>
+        <tbody id="priceTableBody"></tbody>
+      </table>
+      </div>
+      <div class="ota-note" id="otaNote"></div>
+    </div>
+  </div>
+</main>
+
+<footer class="footer">호텔 마케팅 주간 인텔리전스 · 매주 월요일 09:30 자동 발행 · 인천·영종도 주요 호텔 대상</footer>
+
+<script>
+const WEEKS_DATA = [
+  /* ═══════════════════════════════════════════
+   * 6월 1주차  수집: 6/1~6/7  발행: 6/8
+   * ═══════════════════════════════════════════ */
+  {
+    label:"2026년 6월 1주차",
+    range:"2026년 6월 1일(월) ~ 2026년 6월 7일(일)",
+    publishDate:"2026년 6월 8일(월)",
+    checkinDate:"2026년 6월 8일",
+    newsHighlight:"손화정, 영종구 초대 구청장 당선 확정(7/1 출범) / 워커힐 리버파크 개장 + 시즌 패키지 6종 출시 / 메리어트 K 고메 레이스 갈라 디너 티켓 완판",
+    newsSections:[
+      {
+        groupLabel:"📍 인천·영종도 지역",
+        items:[
+          {
+            emoji:"🗳️",cat:"행정·지역개발",
+            headline:"6·3 지방선거 — 손화정, 영종구 초대 구청장 당선 확정",
+            url:"https://www.incheonnews.com/news/articleView.html?idxno=437047",
+            source:"인천뉴스 · 2026.06.04",
+            summary:"6월 3일 치러진 제9회 지방선거에서 더불어민주당 손화정 후보가 영종구 초대 구청장으로 당선됐다. 기존 인천 중구에서 분리돼 7월 1일 공식 출범할 영종구(영종도·용유도 일대)는 독자적 행정구역으로 운영된다.",
+            insight:"📌 마케팅 인사이트: 영종구 독립 행정구 확립으로 지역 관광·숙박 인프라 투자 의사결정 채널 일원화. 신설 구청과의 조기 협업 관계 구축이 중장기 지역 마케팅 정책 연계에 핵심 기회."
+          },
+          {
+            emoji:"🎙️",cat:"행정·지역개발",
+            headline:"손화정, 349표 차로 영종구청장 당선 — \"주민과 소통해 기틀 마련\"",
+            url:"https://www.kyeonggi.com/article/20260604580081",
+            source:"경기일보 · 2026.06.04",
+            summary:"손화정 당선인이 국민의힘 김정헌 후보를 2만9,572표(47.51%)로 349표 차 신승했다. 당선 인터뷰에서 의료·교통·교육 인프라 확충과 인천국제공항 기반 성장 전략을 최우선 과제로 제시했다.",
+            insight:"📌 마케팅 인사이트: 초박빙 승부로 출범한 신설 구청인 만큼 초기 정책 방향이 유동적일 수 있다. 인프라 확충 공약(교통·의료) 추진 상황을 지속 모니터링해 지역 마케팅 협업 시점을 조율할 필요."
+          }
+        ]
+      },
+      {
+        groupLabel:"🏨 호텔 이벤트 & 시즌 상품",
+        items:[
+          {
+            emoji:"🏊",cat:"시즌 프로모션 · 신규 서비스",
+            headline:"워커힐 호텔앤리조트, 야외 수영장 '리버파크' 6월 26일 개장 — 시즌 패키지 6종 동시 출시",
+            url:"https://www.hotelrestaurant.co.kr/news/articleView.html?idxno=21863",
+            source:"호텔앤레스토랑 · 2026.06.01",
+            summary:"워커힐 호텔앤리조트가 6월 1일부터 야외 수영장 '리버파크' 여름 시즌 패키지 6종(리버파크 힐링 데이·다이닝·패밀리 데이·프리미엄 리버파크·스파·나이트 플로팅 명상 패키지)을 동시 출시했다. 수영장은 6월 26일 개장 예정이며 풀사이드 세미 뷔페, 피톤치드 요가, 나이트 플로팅 명상 등 웰니스 프로그램도 함께 운영한다.",
+            insight:"📌 마케팅 인사이트: 단순 수영장 개장을 여름 시즌 체험 마케팅 이벤트로 확장한 사례. 패키지 다변화(웰니스·F&B·가족·프리미엄)를 통한 세그먼트별 공략이 눈에 띔. 당 호텔도 여름 시즌 복합 패키지 기획 시 참고 가능."
+          },
+          {
+            emoji:"🍽️",cat:"레스토랑 이벤트 · F&B",
+            headline:"메리어트 K 고메 레이스 갈라 디너, 1차 티켓 20분 완판 — 6월 5일 2차 티켓 추가 오픈",
+            url:"https://www.hotelrestaurant.co.kr/news/articleView.html?idxno=21868",
+            source:"호텔앤레스토랑 · 2026.06.02",
+            summary:"메리어트 인터내셔널의 국내 호텔 업계 최초 미식 셰프 경연 대회 '메리어트 K 고메 레이스' 결선 갈라 디너가 6월 19일 JW 메리어트 동대문 스퀘어 서울에서 진행된다. 1차 티켓이 20분 만에 완판돼 6월 5일 캐치테이블을 통해 2차 티켓이 소량 추가 오픈됐다. 결선 진출 3팀이 K 미식 기반 모던 다이닝·글렌리벳 주류 페어링 메뉴를 선보인다.",
+            insight:"📌 마케팅 인사이트: 호텔 셰프 경연을 유료 고객 체험 이벤트로 확장해 화제성과 예약 전환을 동시에 달성한 F&B 콘텐츠 마케팅 사례. 티켓 기반 참여형 이벤트로 희소성과 몰입도를 높인 구성 방식 참고 가능."
+          }
+
+        ]
+      }
+    ],
+    hotels:[
+      {name:"인스파이어 엔터테인먼트 리조트",badge:"복합리조트",jsNotice:true,isNew:false,promos:[{tags:["package","event"],title:"스프링 플레이케이션 패키지",desc:"워터파크 무료 이용 포함 봄·여름 시즌 패키지 운영. 공식 홈페이지 직접 예약 추가 혜택 제공.",period:"2026.03~06"}]},
+      {name:"더 위크 앤 리조트",badge:"리조트",jsNotice:false,isNew:false,promos:[{tags:["sale"],title:"주중 특가 · 최대 20% 할인",desc:"주중(월~목) 직접 예약 시 최대 20% 할인. 조식 포함 옵션 선택 가능.",period:"2026.06"}]},
+      {name:"파라다이스시티",badge:"카지노·복합리조트",jsNotice:true,isNew:false,promos:[{tags:["package"],title:"카지노·스파 패키지 프로모션",desc:"투숙객 전용 스파 무료 이용 및 카지노 포인트 적립 패키지 운영.",period:"2026.06"}]},
+      {name:"하얏트 리젠시 인천 파라다이스시티",badge:"신규 오픈(2026.03)",jsNotice:false,isNew:false,promos:[{tags:["new"],title:"그랜드 오프닝 웰컴 오퍼",desc:"오프닝 기념 특별 요금 및 업그레이드 혜택 제공. 하얏트 월드 포인트 2배 적립.",period:"2026.03~06"}]},
+      {name:"그랜드 하얏트 인천",badge:"5성급",jsNotice:true,isNew:false,promos:[{tags:["package"],title:"Family Summer Stay 패키지",desc:"어린이 무료 조식 및 키즈 어메니티 제공. 패밀리 룸 얼리체크인·레이트체크아웃 혜택.",period:"2026.06~08"}]},
+      {name:"베스트웨스턴 프리미어 인천에어포트",badge:"공항호텔",jsNotice:true,isNew:false,promos:[{tags:["sale"],title:"환승 특가 · 공항 픽업 포함",desc:"인천공항 환승·조기 출발 여행객 대상 특가 패키지. 공항 셔틀 무료 포함.",period:"2026.06"}]}
+    ],
+    prices:[
+      {hotel:"더 위크 앤 리조트",na:true,official:null},
+      {hotel:"그랜드 하얏트 인천",na:true,official:null},
+      {hotel:"베스트웨스턴 프리미어",na:true,official:null},
+      {hotel:"인스파이어 엔터테인먼트 리조트",na:true,official:null},
+      {hotel:"하얏트 리젠시 인천 파라다이스시티",na:true,official:null},
+      {hotel:"파라다이스시티 인천",na:true,official:null}
+    ],
+    priceNote:"※ 1주차(6/8 체크인) 최저가는 과거 날짜로 현재 OTA에서 조회 불가합니다. 3주차부터 네이버·구글 메타서치 및 공식 홈페이지 기준 실시간 최저가를 제공합니다.",
+    priceNa:true,
+  },
+
+  /* ═══════════════════════════════════════════
+   * 6월 2주차  수집: 6/8~6/14  발행: 6/15
+   * ═══════════════════════════════════════════ */
+  {
+    label:"2026년 6월 2주차",
+    range:"2026년 6월 8일(월) ~ 2026년 6월 14일(일)",
+    publishDate:"2026년 6월 15일(월)",
+    checkinDate:"2026년 6월 15일",
+    newsHighlight:"야놀자리서치 워터밤서울 글로벌 페스티벌 TOP20 / 서울국제주류&와인박람회 개최 예고 / SCA 스페셜티커피 자격과정 국내 첫 론칭 / L7 광명 오프닝 세레머니 / 메리어트 본보이 로열-티 캠페인 확대",
+    newsSections:[
+      {
+        groupLabel:"🇰🇷 국내 호텔 산업",
+        items:[
+          {
+            emoji:"🎪",cat:"수요·트렌드",
+            headline:"야놀자리서치, '2026 글로벌 축제 매력도 지수' 발표 — 워터밤 서울 글로벌 TOP 20 기록",
+            url:"https://www.hotelrestaurant.co.kr/news/articleView.html?idxno=21887",
+            source:"호텔앤레스토랑 · 2026.06.09",
+            summary:"야놀자리서치가 '2026 글로벌 축제 매력도 지수'를 발표하며 워터밤 서울이 글로벌 TOP 20(16위)에 이름을 올렸다고 밝혔다. 국내 워터 페스티벌이 외국인 방한 수요를 유발하는 콘텐츠로 부상하고 있다.",
+            insight:"📌 마케팅 인사이트: 국내 대형 페스티벌의 외국인 참석 수요가 공항 인근 숙박 수요와 연결될 여지가 있다. 행사 기간 연계 셔틀·패키지 프로모션을 검토할 만하다."
+          },
+          {
+            emoji:"🍷",cat:"MICE·전시",
+            headline:"'2026 서울국제주류&와인박람회' 코엑스에서 6월 18일부터 3일간 개최",
+            url:"https://www.hotelrestaurant.co.kr/news/articleView.html?idxno=21892",
+            source:"호텔앤레스토랑 · 2026.06.09",
+            summary:"제35회 서울국제주류&와인박람회가 6월 18~20일 코엑스 3층 C홀에서 열린다. 360여 개사 450부스가 참가하며 스페인 바스크·카탈루냐 와인이 국내 최초로 참가하는 점이 특징이다.",
+            insight:"📌 마케팅 인사이트: 국내 최장수 주류 전시회로 F&B 업계 관심이 높다. 호텔 다이닝·바 시즌 메뉴 개발 시 참가 와이너리 트렌드를 참고할 수 있다."
+          },
+          {
+            emoji:"☕",cat:"F&B 트렌드",
+            headline:"SCA, 최상위 커피 전문가 인증 'Master of Specialty Coffee' 한국서 첫 론칭",
+            url:"https://www.hotelrestaurant.co.kr/news/articleView.html?idxno=21888",
+            source:"호텔앤레스토랑 · 2026.06.09",
+            summary:"스페셜티커피협회(SCA)가 포시즌스호텔 서울에서 미디어 간담회를 열고 세계 최초 최상위 커피 전문가 자격과정 'Master of Specialty Coffee'를 한국에서 공식 론칭한다고 발표했다.",
+            insight:"📌 마케팅 인사이트: 호텔 F&B 인력의 전문성 강화 트렌드가 부상하고 있다. 자사 라운지·카페 바리스타 역량 인증 도입을 검토할 시점."
+          },
+          {
+            emoji:"📊",cat:"관광산업 데이터",
+            headline:"야놀자리서치, '한국 관광도시 경쟁력 평가 및 강화 방안' 세미나 개최 예고",
+            url:"https://www.hotelrestaurant.co.kr/news/articleView.html?idxno=21894",
+            source:"호텔앤레스토랑 · 2026.06.11",
+            summary:"야놀자리서치가 퍼듀대·경희대와 공동 개발한 전국 255개 시군구 대상 관광도시 경쟁력 평가모델을 6월 22일 세미나에서 공개한다고 예고했다. 수도권 편중 등 지역 관광 격차 이슈를 다룰 예정이다.",
+            insight:"📌 마케팅 인사이트: 지역 관광 경쟁력 평가 결과가 향후 인천·영종도 지역 순위에 어떻게 반영되는지 후속 확인이 필요하다."
+          }
+        ]
+      },
+      {
+        groupLabel:"🏨 호텔 이벤트 & 시즌 상품",
+        items:[
+          {
+            emoji:"🏙️",cat:"신규 서비스 런칭",
+            headline:"L7 광명 바이 롯데호텔, 오프닝 세레머니 성료 — 경기 광명 최초 라이프스타일 호텔",
+            url:"https://www.hotelrestaurant.co.kr/news/articleView.html?idxno=21895",
+            source:"호텔앤레스토랑 · 2026.06.11",
+            summary:"롯데호텔의 라이프스타일 브랜드 'L7'이 경기 광명에서 오프닝 세레머니를 열고 6월 11일 그랜드 오픈했다. 경기 지역 최초의 L7 브랜드 호텔로, 루프탑 바·다이닝·피트니스 등을 갖춘 도심형 호텔이다.",
+            insight:"📌 마케팅 인사이트: 수도권 주요 라이프스타일 호텔 공급 증가로 MZ 세대 투숙 수요 경쟁 심화. 공항 접근성·서비스 차별화 포인트를 공략해 인천 지역만의 강점을 명확히 포지셔닝해야 할 시점."
+          },
+          {
+            emoji:"🍵",cat:"멤버십 프로모션 · 브랜드 협업",
+            headline:"메리어트 본보이, '로열-티' 캠페인 전국 10개 호텔로 확대 — 애프터눈 티·웰니스 프로그램 전개",
+            url:"https://www.newswire.co.kr/newsRead.php?no=1036031",
+            source:"뉴스와이어 · 2026.06.08",
+            summary:"메리어트 본보이가 JW메리어트 서울·동대문·제주, 코트야드 메리어트 서울타임스퀘어·수원·평택·서울보타닉파크·서울판교, 대구메리어트, 포포인츠 바이 쉐라톤 수원 등 전국 10개 호텔에서 '로열-티 바이 메리어트 본보이' 캠페인을 확대 전개한다. 딜마 협업 한정 블렌드 티 기반 애프터눈 티 세트와 웰니스 프로그램을 순차 운영한다.",
+            insight:"📌 마케팅 인사이트: 멤버십 로열티 프로그램을 다이닝·웰니스 일상 체험과 결합해 비여행 접점에서도 브랜드 가치를 전달하는 전략. 인천권 호텔에는 아직 미포함된 캠페인으로, 지역 호텔의 로열티 프로그램 확대 여지가 있다."
+          }
+        ]
+      }
+    ],
+    hotels:[
+      {name:"인스파이어 엔터테인먼트 리조트",badge:"복합리조트",jsNotice:true,isNew:false,promos:[{tags:["package","event"],title:"여름 얼리버드 패키지",desc:"조기 예약 시 최대 15% 추가 할인. 워터파크 이용권 포함 옵션 운영.",period:"2026.06~07"}]},
+      {name:"더 위크 앤 리조트",badge:"리조트",jsNotice:false,isNew:false,promos:[{tags:["sale"],title:"2박 이상 장기 투숙 특가",desc:"2박 이상 예약 시 추가 5% 할인. 오션뷰 업그레이드 무료 (선착순).",period:"2026.06"}]},
+      {name:"파라다이스시티",badge:"카지노·복합리조트",jsNotice:true,isNew:false,promos:[{tags:["event"],title:"실내 수영장 공사 중 (6/8~6/24)",desc:"수영장 6/8~6/24 이용 제한. 6/25 14시 재개장. 야외 시설·스파 정상 운영.",period:"2026.06.08~06.24"}]},
+      {name:"하얏트 리젠시 인천 파라다이스시티",badge:"신규 오픈(2026.03)",jsNotice:false,isNew:false,promos:[{tags:["new","sale"],title:"그랜드 오프닝 조기 예약 특가",desc:"오픈 기념 특별 요금 연장 운영. 하얏트 월드 포인트 2배 적립.",period:"2026.03~07"}]},
+      {name:"그랜드 하얏트 인천",badge:"5성급",jsNotice:true,isNew:true,promos:[{tags:["new","package"],title:"Summer Splash Package",desc:"수영장 무제한+조식 포함 여름 패키지 출시. 패밀리·커플 타깃 구성.",period:"2026.06~08"}]},
+      {name:"베스트웨스턴 프리미어 인천에어포트",badge:"공항호텔",jsNotice:true,isNew:false,promos:[{tags:["sale"],title:"공항 직결 환승 패키지 특가",desc:"공항 픽업·드롭 셔틀 무료 포함. 환승 특가 직접 예약 한정.",period:"2026.06"}]}
+    ],
+    prices:[
+      {hotel:"더 위크 앤 리조트",na:true,official:null},
+      {hotel:"그랜드 하얏트 인천",na:true,official:null},
+      {hotel:"베스트웨스턴 프리미어",na:true,official:null},
+      {hotel:"인스파이어 엔터테인먼트 리조트",na:true,official:null},
+      {hotel:"하얏트 리젠시 인천 파라다이스시티",na:true,official:null},
+      {hotel:"파라다이스시티 인천",na:true,official:null}
+    ],
+    priceNote:"※ 2주차(6/15 체크인) 최저가는 과거 날짜로 현재 OTA에서 조회 불가합니다. 3주차부터 네이버·구글 메타서치 및 공식 홈페이지 기준 실시간 최저가를 제공합니다.",
+    priceNa:true,
+  },
+
+  /* ═══════════════════════════════════════════
+   * 6월 3주차  수집: 6/15~6/21  발행: 6/22
+   * ═══════════════════════════════════════════ */
+  {
+    label:"2026년 6월 3주차",
+    range:"2026년 6월 15일(월) ~ 2026년 6월 21일(일)",
+    publishDate:"2026년 6월 22일(월)",
+    checkinDate:"2026년 6월 22일",
+    newsHighlight:"7호선 청라 연장선, 지반침하로 개통 추가 연기(2029·2031년) / 인천공항 '항공 AI 리더십 포럼' 개최 / 5월 외국인 관광객 카드소비 2조 돌파 / 서울드래곤시티 프리미엄 연회장 '르 시엘 31' 오픈",
+    newsSections:[
+      {
+        groupLabel:"📍 인천·영종도 지역",
+        items:[
+          {
+            emoji:"🚇",cat:"교통·인프라",
+            headline:"전동차 납품 문제만 알았는데…7호선 청라 연장선, 지반침하로 추가 연기",
+            url:"https://news.ifm.kr/news/articleView.html?idxno=473064",
+            source:"경인방송 · 2026.06.15",
+            summary:"서울 7호선 청라국제도시 연장사업이 2023년 지반침하 문제로 공정률이 계획보다 25% 뒤처져, 1단계 개통이 2027년→2029년, 2단계가 2029년→2031년 이후로 지연될 전망이다. 인천시의회에서는 뒤늦은 보고에 대한 질타가 이어졌다.",
+            insight:"📌 마케팅 인사이트: 영종도 육상 접근성 개선이 2031년 이후로 재차 지연됐다. 공항 리무진·셔틀 중심 교통 마케팅이 당분간 유효하며, 지연 이슈 자체를 부정적으로 다루기보다 '공항 직결 접근성'을 상대적 강점으로 부각할 수 있다."
+          },
+          {
+            emoji:"🤖",cat:"공항·인프라",
+            headline:"인천공항, 아시아·태평양 최초 '공항 AI 리더십 포럼' 개최",
+            url:"https://news.ifm.kr/news/articleView.html?idxno=472993",
+            source:"경인방송 · 2026.06.15",
+            summary:"인천국제공항공사가 아시아·태평양 최초로 '공항 AI 리더십 포럼'을 개최, 전 세계 40여 명의 공항 AI 혁신 리더가 참석했다. 제2여객터미널 인근에 2만3,000㎡ 규모 '항공 AI 혁신허브' 조성 계획도 함께 발표했다.",
+            insight:"📌 마케팅 인사이트: 인천공항의 AI 혁신 허브 조성은 공항 인근 호텔의 스마트 컨시어지·자동화 체크인 서비스 도입 명분으로 활용할 수 있다. 공항공사 주도 혁신 이니셔티브와의 연계 마케팅 검토 권장."
+          }
+        ]
+      },
+      {
+        groupLabel:"🇰🇷 국내 호텔 산업",
+        items:[
+          {
+            emoji:"💳",cat:"인바운드·소비",
+            headline:"5월 외국인 관광객 카드 소비 사상 최초 2조 돌파 — 역대 최고 성장률",
+            url:"https://www.hotelrestaurant.co.kr/news/articleView.html?idxno=21905",
+            source:"호텔앤레스토랑 · 2026.06.17",
+            summary:"2026년 5월 외국인 관광객의 국내 카드 소비액이 2조1,222억 원으로 사상 최초 2조 원을 돌파하며 전년 대비 67.1% 증가, 역대 최고 성장률을 기록했다. 중국인 관광객 소비가 214.0% 급증했고 K뷰티·약국 소비도 206.1% 늘었다.",
+            insight:"📌 마케팅 인사이트: 중국인 인바운드 소비 회복이 뚜렷하다. 중국어 응대·알리페이 등 현지 결제 수단 연동, 면세·뷰티 연계 패키지를 강화할 시점."
+          }
+        ]
+      },
+      {
+        groupLabel:"🏨 호텔 이벤트 & 시즌 상품",
+        items:[
+          {
+            emoji:"🥂",cat:"신규 서비스 런칭",
+            headline:"서울드래곤시티, 압도적 개방감의 프리미엄 연회장 '르 시엘 31(LE CIEL 31)' 오픈",
+            url:"https://www.hotelrestaurant.co.kr/news/articleView.html?idxno=21907",
+            source:"호텔앤레스토랑 · 2026.06.18",
+            summary:"서울드래곤시티가 31층에 전면 유리창 뷰의 프리미엄 연회장 '르 시엘 31'을 오픈했다. 최대 200명 수용 가능한 연회 공간으로 기업 행사, 웨딩, 특별 만찬 등에 특화됐으며 파노라마 서울 뷰가 강점이다.",
+            insight:"📌 마케팅 인사이트: 프리미엄 뷰와 공간 스케일을 결합한 연회 상품 출시. 공항 접근성 기반 MICE 유치를 목표로 하는 당 호텔도 연회 공간 강점을 콘텐츠화하는 마케팅 전략 검토 권장."
+          }
+        ]
+      }
+    ],
+    hotels:[
+      {name:"인스파이어 엔터테인먼트 리조트",badge:"복합리조트",jsNotice:true,isNew:true,promos:[
+        {tags:["new","package"],title:"퓨어 썸머 패키지 2026",desc:"워터파크+조식+업그레이드 포함 여름 대표 상품. 어린이 동반 가족 키즈 어메니티 제공.",period:"2026.07~08"},
+        {tags:["sale"],title:"조기 예약 특가 · 최대 20% 할인",desc:"7월 이후 투숙 조기 예약 시 최대 20% 할인. 공식 홈페이지 직접 예약 한정.",period:"~2026.06.30"}
+      ]},
+      {name:"더 위크 앤 리조트",badge:"리조트",jsNotice:false,isNew:false,promos:[{tags:["package"],title:"오션뷰 패키지 · 조식+석식 포함",desc:"오션뷰 객실+조식·석식 포함 패키지. 2박 예약 시 레이트체크아웃 무료.",period:"2026.06~07"}]},
+      {name:"파라다이스시티",badge:"카지노·복합리조트",jsNotice:true,isNew:true,promos:[
+        {tags:["new","event"],title:"수영장 재개장 기념 이벤트 (6/25~)",desc:"실내 수영장 6월 25일 재개장 기념 특별 패키지. 재개장 후 첫 주말 얼리버드 혜택.",period:"2026.06.25~"},
+        {tags:["new","package"],title:"소닉 시그니처 빙수 · 멤버스데이",desc:"소닉 IP 협업 한정 빙수 판매 중. 멤버스데이 카지노 포인트 추가 적립·굿즈 증정.",period:"2026.06 여름 시즌"}
+      ]},
+      {name:"하얏트 리젠시 인천 파라다이스시티",badge:"신규 오픈(2026.03)",jsNotice:false,isNew:true,promos:[
+        {tags:["new","event"],title:"소닉 체크인 어드벤처 — IP 테마룸",desc:"소닉 더 헤지혹 35주년 협업. 테마룸·포토존·체험존·한정판 굿즈·시즌 F&B 운영.",period:"2026.06.22~09.06"},
+        {tags:["package"],title:"그랜드 오프닝 패키지 · 포인트 2배",desc:"오픈 기념 특별 요금 연장. 월드 오브 하얏트 포인트 2배 적립.",period:"2026.03~07"}
+      ]},
+      {name:"그랜드 하얏트 인천",badge:"5성급",jsNotice:true,isNew:false,promos:[
+        {tags:["package"],title:"Summer Splash Package",desc:"수영장 무제한+조식 포함 여름 대표 패키지. 하얏트 회원 추가 10% 할인.",period:"2026.07~08"},
+        {tags:["event"],title:"Atrium Sunday Brunch",desc:"뷔페식 선데이 브런치 운영. 패키지 예약 고객 20% 할인.",period:"2026.06~"}
+      ]},
+      {name:"베스트웨스턴 프리미어 인천에어포트",badge:"공항호텔",jsNotice:true,isNew:false,promos:[{tags:["sale"],title:"공항 환승 특가 · 최저가 보장",desc:"직접 예약 최저가 보장 정책. 24시간 공항 셔틀 무료.",period:"2026.06~"}]}
+    ],
+    prices:[
+      {hotel:"더 위크 앤 리조트",amount:"105,825원~",room:"스탠다드 (오션뷰)",channel:"호텔스컴바인",na:false},
+      {hotel:"그랜드 하얏트 인천",amount:"178,000원~",room:"킹 룸",channel:"KAYAK · Agoda",na:false},
+      {hotel:"베스트웨스턴 프리미어",amount:"106,500원~",room:"스탠다드 룸",channel:"KAYAK",na:false},
+      {hotel:"인스파이어 엔터테인먼트 리조트",amount:"218,831원~",room:"디럭스 룸",channel:"호텔스컴바인 · trip.com",na:false},
+      {hotel:"하얏트 리젠시 인천 파라다이스시티",amount:"215,800원~",room:"스탠다드 킹",channel:"KAYAK",na:false},
+      {hotel:"파라다이스시티 인천",amount:"306,700원~",room:"스탠다드 룸",channel:"KAYAK",na:false}
+    ],
+    priceNote:"※ 조회 기준: 2026년 6월 22일(월) 체크인 1박. 네이버·구글 웹 검색 및 호텔스컴바인·KAYAK 글로벌 메타서치 기준 최저 표시가. OTA와 공식 홈페이지를 비교해 가장 낮은 가격 1개만 표시합니다. 실시간 가격과 차이가 있을 수 있으며 환율 변동 반영됩니다.",
+    priceNa:false,
+  },
+
+  /* ═══════════════════════════════════════════
+   * 7월 1주차  수집: 6/29~7/5  발행: 7/6
+   * (전면 재검증판 — 언론사 보도만 수록, 각 기사 발행일 확인 완료)
+   * ═══════════════════════════════════════════ */
+  {
+    label:"2026년 7월 1주차",
+    range:"2026년 6월 29일(월) ~ 2026년 7월 5일(일)",
+    publishDate:"2026년 7월 6일(월)",
+    checkinDate:"2026년 7월 6일",
+    newsHighlight:"신도평화대교 7월 14일 개통 확정 / HMM 영종도 반려해변 정화활동 / 제주항공 국제선 외국인 탑승 비중 확대 / 제주신화월드 신화워터파크 전면개장 / 라 페스타 푸꾸옥 다이닝 라인업 확장",
+    newsSections:[
+      {
+        groupLabel:"📍 인천·영종도 지역",
+        items:[
+          {
+            emoji:"🌉",cat:"교통·인프라",
+            headline:"인천 영종도와 신도 연결 '신도평화대교' 14일 개통",
+            url:"https://www.newsis.com/view/NISX20260703_0003694704",
+            source:"뉴시스 · 2026.07.03",
+            summary:"인천시 종합건설본부가 영종도와 신도를 잇는 신도평화대교를 7월 14일 오후 2시 전면 개통한다고 3일 밝혔다. 총길이 3.26㎞, 왕복 2차로에 보행자·자전거 겸용 도로를 갖췄으며 통행료는 무료다. 그동안 배편에만 의존해야 했던 신·시·모도 주민들이 24시간 육지 왕래가 가능해진다.",
+            insight:"📌 마케팅 인사이트: 영종도~신도 육상 연결로 서해 접경 도서 관광 연계 상품 기획 여지가 생긴다. 인천권 호텔은 '신도·시도·모도 당일 드라이브 코스'를 결합한 숙박 패키지를 검토할 수 있다."
+          },
+          {
+            emoji:"🌊",cat:"지역경제·ESG",
+            headline:"HMM, 신입사원과 영종도 거잠포해변서 반려해변 정화활동",
+            url:"https://www.etoday.co.kr/news/view/2600306",
+            source:"이투데이 · 2026.07.05",
+            summary:"HMM이 올해 입사한 신입사원과 임직원 등 30여 명과 함께 인천 영종도 거잠포 해변에서 해양 쓰레기를 수거하는 '반려해변 정화활동'을 진행했다. 2023년부터 매년 두 차례 이상 이어온 활동이다.",
+            insight:"📌 마케팅 인사이트: 영종도 소재 대기업의 ESG 활동이 지속적으로 보도되고 있다. 인천권 호텔도 지역 해변·환경 연계 사회공헌 프로그램을 통해 지역사회 이미지를 제고할 수 있다."
+          }
+        ]
+      },
+      {
+        groupLabel:"🇰🇷 국내 호텔 산업",
+        items:[
+          {
+            emoji:"✈️",cat:"인바운드·여행수요",
+            headline:"제주항공, 국제선 승객 10명 중 3명은 외국인",
+            url:"https://www.hotelrestaurant.co.kr/news/articleView.html?idxno=21971",
+            source:"호텔앤레스토랑 · 2026.06.30",
+            summary:"제주항공이 올해 1~5월 국제선 탑승객을 분석한 결과 총 358만9000여 명 중 29.5%인 105만8000여 명이 외국인으로 집계됐다. 지난해 같은 기간보다 23% 증가한 수치로, 인천~도쿄·오사카 노선이 외국인 탑승객이 가장 많은 노선으로 나타났다.",
+            insight:"📌 마케팅 인사이트: 일본·중화권·동남아 인바운드가 뚜렷하게 늘고 있다. 인천공항 인근 호텔은 다국어 응대·환승객 특화 서비스를 강화해 이 수요를 직접 흡수할 필요가 있다."
+          }
+        ]
+      },
+      {
+        groupLabel:"🏨 호텔 이벤트 & 시즌 상품",
+        items:[
+          {
+            emoji:"🎢",cat:"시즌 프로모션 · 신규 서비스",
+            headline:"제주 바다보다 짜릿한 '신화워터파크', 7월 4일 전면 개장",
+            url:"https://www.hotelrestaurant.co.kr/news/articleView.html?idxno=21978",
+            source:"호텔앤레스토랑 · 2026.07.01",
+            summary:"국내 최대 복합리조트 제주신화월드의 '신화워터파크'가 7월 4일 전체 개장하며 본격적인 여름 시즌에 돌입했다. 18개 어트랙션을 갖췄으며 신화관 투숙객에게는 워터파크 무료 이용 혜택이 제공된다.",
+            insight:"📌 마케팅 인사이트: 워터파크 전면 개장과 투숙객 무료 이용 혜택을 연계해 객실 점유율을 끌어올린 사례. 인천권 워터파크 보유 리조트도 개장·재개장 시점을 투숙 연계 프로모션으로 활용할 수 있다."
+          },
+          {
+            emoji:"🍽️",cat:"레스토랑 이벤트 · F&B",
+            headline:"라 페스타 푸꾸옥, 8개 글로벌 다이닝 라인업 완성",
+            url:"https://www.hotelrestaurant.co.kr/news/articleView.html?idxno=21976",
+            source:"호텔앤레스토랑 · 2026.06.30",
+            summary:"힐튼 큐리오 컬렉션 소속 '라 페스타 푸꾸옥'이 신규 객실동 개관과 함께 광둥식 레스토랑 '세타' 등 3개 시그니처 레스토랑을 추가해 총 8개의 다이닝·바를 갖췄다. 홍콩 출신 미쉐린 경력 셰프가 총괄을 맡았다.",
+            insight:"📌 마케팅 인사이트: 신규 객실동 개관을 다이닝 라인업 확장과 동시에 발표해 화제성을 높인 사례. 인천권 리조트도 시설 확장 시 F&B 신규 콘셉트를 함께 공개하는 통합 커뮤니케이션을 검토할 수 있다."
+          }
+        ]
+      }
+    ],
+    hotels:[
+      {name:"인스파이어 엔터테인먼트 리조트",badge:"복합리조트",jsNotice:true,isNew:false,promos:[{tags:["package"],title:"퓨어 썸머 패키지 2026",desc:"워터파크+조식+업그레이드 포함 여름 대표 상품. 어린이 동반 가족 키즈 어메니티 제공. (지난주 대비 변동 없음)",period:"2026.07~08"}]},
+      {name:"더 위크 앤 리조트",badge:"리조트",jsNotice:false,isNew:false,promos:[{tags:["package"],title:"오션뷰 패키지 · 조식+석식 포함",desc:"오션뷰 객실+조식·석식 포함 패키지. 2박 예약 시 레이트체크아웃 무료. (지난주 대비 변동 없음)",period:"2026.06~07"}]},
+      {name:"파라다이스시티",badge:"카지노·복합리조트",jsNotice:true,isNew:false,promos:[
+        {tags:["event"],title:"수영장 재개장 기념 이벤트",desc:"실내 수영장 6월 25일 재개장 기념 특별 패키지 운영 지속. (지난주 대비 변동 없음)",period:"2026.06.25~"},
+        {tags:["package"],title:"소닉 시그니처 빙수 · 멤버스데이",desc:"소닉 IP 협업 한정 빙수 판매 지속. 멤버스데이 카지노 포인트 추가 적립·굿즈 증정. (지난주 대비 변동 없음)",period:"2026.06 여름 시즌"}
+      ]},
+      {name:"하얏트 리젠시 인천 파라다이스시티",badge:"신규 오픈(2026.03)",jsNotice:false,isNew:false,promos:[
+        {tags:["event"],title:"소닉 체크인 어드벤처 — IP 테마룸",desc:"소닉 더 헤지혹 35주년 협업 테마룸·포토존·체험존·한정판 굿즈·시즌 F&B 운영 지속. (지난주 대비 변동 없음)",period:"2026.06.22~09.06"},
+        {tags:["package"],title:"그랜드 오프닝 패키지 · 포인트 2배",desc:"오픈 기념 특별 요금 연장 운영. 월드 오브 하얏트 포인트 2배 적립. (지난주 대비 변동 없음)",period:"2026.03~07"}
+      ]},
+      {name:"그랜드 하얏트 인천",badge:"5성급",jsNotice:true,isNew:false,promos:[
+        {tags:["package"],title:"Summer Splash Package",desc:"수영장 무제한+조식 포함 여름 패키지. 하얏트 회원 추가 10% 할인. (지난주 대비 변동 없음)",period:"2026.07~08"},
+        {tags:["event"],title:"Atrium Sunday Brunch",desc:"뷔페식 선데이 브런치 운영 지속. 패키지 예약 고객 20% 할인. (지난주 대비 변동 없음)",period:"2026.06~"}
+      ]},
+      {name:"베스트웨스턴 프리미어 인천에어포트",badge:"공항호텔",jsNotice:true,isNew:false,promos:[{tags:["sale"],title:"공항 환승 특가 · 최저가 보장",desc:"직접 예약 최저가 보장 정책 지속. 24시간 공항 셔틀 무료. (지난주 대비 변동 없음)",period:"2026.06~"}]}
+    ],
+    prices:[
+      {hotel:"더 위크 앤 리조트",amount:"$72(약 10만원대)~",room:"객실 1박 기준(호텔스닷컴 실시간가, 예시일 5/12~13)",channel:"Hotels.com",na:false},
+      {hotel:"그랜드 하얏트 인천",amount:"$183(약 25만원대)~",room:"객실 1박 기준(호텔스닷컴 실시간가, 예시일 7/9~10)",channel:"Hotels.com",na:false},
+      {hotel:"베스트웨스턴 프리미어",amount:"$71(약 10만원대)~",room:"객실 1박 기준(호텔스닷컴 실시간가, 예시일 7/16~17)",channel:"Hotels.com",na:false},
+      {hotel:"인스파이어 엔터테인먼트 리조트",amount:"$202(약 28만원대)~",room:"객실 1박 기준(호텔스닷컴 실시간가, 예시일 7/15~16)",channel:"Hotels.com",na:false},
+      {hotel:"하얏트 리젠시 인천 파라다이스시티",amount:"$143(약 20만원대)~",room:"객실 1박 기준(호텔스닷컴 실시간가, 예시일 5/18~19)",channel:"Hotels.com",na:false},
+      {hotel:"파라다이스시티 인천",amount:"$256(약 35만원대)~",room:"객실 1박 기준(호텔스닷컴 실시간가, 예시일 7/7~8)",channel:"Hotels.com",na:false}
+    ],
+    priceNote:"※ 6개 호텔 모두 해당일자 기준 객실 조회·예약이 가능함을 확인했습니다. 다만 Hotels.com이 자동 표시하는 예시 날짜가 검색 시점마다 7/6과 약간 다른 인접일(5월·7월 중순 등)로 표시되어, 위 금액은 '7/6 전후 실시간 조회가'로 이해해 주시기 바랍니다. 원화는 검색일 기준 원/달러 환율로 환산한 대략치이며, 스탠다드 객실 1박·성인 2명 기준입니다. 정확한 7/6 체크인 금액은 예약 전 각 채널에서 날짜를 직접 지정해 재확인을 권장합니다.",
+    priceNa:false,
+  },
+
+  /* ═══════════════════════════════════════════
+   * 7월 2주차  수집: 7/6~7/12  발행: 7/13
+   * ═══════════════════════════════════════════ */
+  {
+    label:"2026년 7월 2주차",
+    range:"2026년 7월 6일(월) ~ 2026년 7월 12일(일)",
+    publishDate:"2026년 7월 13일(월)",
+    checkinDate:"2026년 7월 13일",
+    newsHighlight:"신도평화대교 14일 개통 임박·현장 공개 / 인천공항 항공보안주간(7/8~10) / 파라다이스시티 '파리지앵 썸머'·'씨메르 썸머 페스타' 개막 / 파라다이스시티·아트파라디소 세계 1000대 호텔 선정 / '몰캉스' 트렌드 확산",
+    newsSections:[
+      {
+        groupLabel:"📍 인천·영종도 지역",
+        items:[
+          {
+            emoji:"🌉",cat:"교통·인프라",
+            headline:"신도평화대교 개통 임박 — 현장 공개, 14일 전면 개통",
+            url:"https://www.livesnews.com/news/article.html?no=62497",
+            source:"라이브뉴스 · 2026.07.10",
+            summary:"영종도와 신도를 잇는 신도평화대교가 7월 14일 오후 2시 전면 개통을 앞두고 10일 현장이 공개됐다. 총연장 3.26㎞ 왕복 2차로 규모로, 주탑 디자인은 신도·시도·모도를 하늘에서 내려다본 형상을 모티브로 설계됐다.",
+            insight:"📌 마케팅 인사이트: 개통이 임박하며 서해 접경 도서 관광 연계 상품 기획의 실행 시점이 다가왔다. 인천권 호텔은 개통 시점에 맞춰 '신도·시도·모도 당일 드라이브 코스' 결합 숙박 패키지를 선제적으로 준비할 필요가 있다."
+          },
+          {
+            emoji:"✈️",cat:"교통·공항인프라",
+            headline:"국토부, 7월 8~10일 인천공항서 '2026 항공보안주간' 개최",
+            url:"https://news.ifm.kr/news/articleView.html?idxno=474494",
+            source:"경인방송 · 2026.07.07",
+            summary:"국토교통부가 국가정보원·경찰청과 함께 7월 8일부터 10일까지 국립항공박물관과 인천·김포 등 전국 공항에서 '2026 항공보안주간'을 개최한다. AI 기반 항공보안장비 전시·체험, 보안 종사자 경연 등이 운영된다.",
+            insight:"📌 마케팅 인사이트: 공항 보안·기술 행사 기간 방문객 유입이 예상되는 만큼 공항 인근 호텔은 행사 참가자 대상 단기 투숙 수요를 겨냥한 프로모션을 검토할 수 있다."
+          }
+        ]
+      },
+      {
+        groupLabel:"🏨 호텔 이벤트 & 시즌 상품",
+        items:[
+          {
+            emoji:"🇫🇷",cat:"시즌 프로모션 · F&B",
+            headline:"파라다이스시티, 프랑스 관광청과 '파리지앵 썸머' 개막 — 톰 콜 셰프 애프터눈티",
+            url:"https://www.ajunews.com/view/20260707090218718",
+            source:"아주경제 · 2026.07.07",
+            summary:"파라다이스시티가 프랑스 관광청과 손잡고 7월 19일부터 8월 31일까지 '파리지앵 썸머' 페스티벌을 개최한다. 라 리스트 2025 올해의 페이스트리 인재 톰 콜 셰프와 협업한 시즌 한정 디저트 카페 '르 카페'를 비롯해 파리 광장, 가스파드와 리사 팝업 등이 운영된다.",
+            insight:"📌 마케팅 인사이트: 해외 관광청과의 공동 IP 협업으로 대형 시즌 콘텐츠를 구축한 사례. 국가 브랜드와 연계한 F&B·공간 연출 전략은 체류형 콘텐츠 마케팅의 참고 모델이 된다."
+          },
+          {
+            emoji:"🏊",cat:"시즌 프로모션 · 신규 서비스",
+            headline:"파라다이스시티 '2026 씨메르 썸머 페스타' 개막 — 매주 토요일 풀파티",
+            url:"https://hbnpress.com/news/view/1065570849706255",
+            source:"HBN뉴스 · 2026.07.03(진행 중, 7/11 개막)",
+            summary:"파라다이스시티가 7월 11일부터 8월 29일까지 매주 토요일 씨메르 아웃도어풀에서 풀파티, 클럽 크로마에서 애프터파티를 운영한다. 아트파라디소와 하얏트 리젠시 인천 파라다이스시티는 풀파티 입장권을 연계한 숙박 패키지를 함께 판매한다.",
+            insight:"📌 마케팅 인사이트: 복합리조트 내 다수 호텔이 하나의 이벤트 IP를 공유해 상품을 연계 판매하는 구조. 자사 내 복수 시설 보유 시 이벤트-숙박 연계 패키지의 교차 판매 모델로 참고할 만하다."
+          },
+          {
+            emoji:"🏆",cat:"브랜드·어워드",
+            headline:"파라다이스시티 호텔·아트파라디소, '라 리스트' 세계 1000대 호텔 선정",
+            url:"https://hbnpress.com/news/view/1065590632333151",
+            source:"HBN뉴스 · 2026.07.09",
+            summary:"프랑스 호텔·미식 평가기관 라 리스트가 발표한 '라 리스트 호텔 2026'에서 파라다이스시티 호텔과 아트파라디소가 각각 93.5점으로 국내 공동 6위에 올랐다. 아트파라디소는 신규 개관·리노베이션 호텔 대상 '스타일&디자인 호텔 어워드'도 함께 수상했다.",
+            insight:"📌 마케팅 인사이트: 국제 평가기관 수상 실적은 해외 인바운드 고객 대상 신뢰도 마케팅 소재로 즉시 활용 가능하다. 수상 발표 시점에 맞춘 보도자료·SNS 확산이 효과적이다."
+          },
+          {
+            emoji:"🛍️",cat:"지역 관광 연계 상품 · 트렌드",
+            headline:"'몰캉스' 트렌드 확산 — 인스파이어 등 복합공간 연계 호캉스 인기",
+            url:"https://www.fnnews.com/news/202607091816046779",
+            source:"파이낸셜뉴스 · 2026.07.10",
+            summary:"폭염·장마에 쇼핑·미식·문화를 한 번에 즐기는 '몰캉스'가 여름 호캉스 트렌드로 부상했다. 인천 영종도의 인스파이어 리조트는 '인스파이어 몰'에서 쇼핑·다이닝은 물론 미디어아트 전시관 '르 스페이스', 키즈카페, 볼링센터, 프리미엄 스파를 운영하며 복합문화공간으로 차별화하고 있다.",
+            insight:"📌 마케팅 인사이트: 우천·폭염 시기 실내 복합시설 연계가 핵심 소구점으로 부상했다. 인천권 호텔도 인접 쇼핑·문화시설과의 제휴 혜택을 패키지화해 '실내형 호캉스' 수요를 흡수할 수 있다."
+          }
+        ]
+      }
+    ],
+    hotels:[
+      {name:"인스파이어 엔터테인먼트 리조트",badge:"복합리조트",jsNotice:true,isNew:false,promos:[
+        {tags:["package"],title:"오로라 나이트 마켓 예고 · 망고빙수 추가",desc:"우베 빙수에 이어 7월부터 망고 빙수 판매 시작. 망고 애프터눈 티 세트는 9월 30일까지 운영. 7월 31일~8월 15일 금·토 '오로라 나이트 마켓' 운영 예정.",period:"2026.07~09"},
+        {tags:["event"],title:"스플래시베이 워터파크 이용시간 확대",desc:"7월부터 실내 워터파크 이용권이 6시간으로 확대. 7/1~16 평일 11~20시·주말 9~20시, 7/17~8/17은 매일 9~20시 운영.",period:"2026.07"}
+      ]},
+      {name:"더 위크 앤 리조트",badge:"리조트",jsNotice:false,isNew:true,promos:[
+        {tags:["new","event"],title:"을왕 회 페스티벌 여름 특별 디너뷔페",desc:"무제한 모둠회와 뷔페를 즐기는 여름 한정 디너뷔페. 매주 금·토 운영, 여름 성수기(7/24~8/3)는 매일 운영.",period:"2026.07.24~08.03"},
+        {tags:["new","package"],title:"기업 워크샵 · 웰니스 워케이션 패키지",desc:"팀 리트릿을 위한 워크샵 패키지와 일·휴식 균형을 위한 웰니스 워케이션 패키지를 신규 출시.",period:"2026.07.08~11.08"},
+        {tags:["sale"],title:"보너스 위크",desc:"매월 첫째 주 할인 및 이달의 PICK 아쿠아벤처 패키지 특별 증정.",period:"매월 첫째주(7/1~7)"}
+      ]},
+      {name:"파라다이스시티",badge:"카지노·복합리조트",jsNotice:true,isNew:true,promos:[
+        {tags:["new","event"],title:"파리지앵 썸머 — 프랑스 관광청 협업",desc:"톰 콜 셰프 협업 '르 카페' 애프터눈티, 파리 광장·가스파드와 리사 팝업, 미디어 파사드 상영.",period:"2026.07.19~08.31"},
+        {tags:["new","event"],title:"2026 씨메르 썸머 페스타",desc:"매주 토요일 씨메르 아웃도어풀 풀파티+클럽 크로마 애프터파티. 아트파라디소·하얏트 리젠시 연계 숙박 패키지 판매.",period:"2026.07.11~08.29"},
+        {tags:["event"],title:"세계 1000대 호텔 2026 선정",desc:"라 리스트 평가에서 파라다이스시티 호텔·아트파라디소 국내 공동 6위(93.5점) 선정. 아트파라디소는 '스타일&디자인 호텔 어워드'도 수상.",period:"2026.07 발표"}
+      ]},
+      {name:"하얏트 리젠시 인천 파라다이스시티",badge:"신규 오픈(2026.03)",jsNotice:true,isNew:false,promos:[
+        {tags:["event"],title:"소닉 체크인 어드벤처 — IP 테마룸",desc:"소닉 더 헤지혹 35주년 협업 테마룸·포토존·체험존·한정판 굿즈·시즌 F&B 운영 지속. 그리팅 이벤트 7/10·7/17·7/31 진행. (지난주 대비 변동 없음)",period:"2026.06.22~09.06"},
+        {tags:["package"],title:"파리지앵 썸머 풀앤스테이 패키지",desc:"파라다이스시티 씨메르 썸머 페스타 풀파티 입장권 연계 숙박 패키지 판매.",period:"2026.07.11~08.29"}
+      ]},
+      {name:"그랜드 하얏트 인천",badge:"5성급",jsNotice:true,isNew:false,promos:[
+        {tags:["package"],title:"Summer Splash Package",desc:"수영장 무제한+조식 포함 여름 패키지 지속 운영. (지난주 대비 변동 없음)",period:"2026.06~08.23"},
+        {tags:["sale"],title:"월드 오브 하얏트 회원 여름 할인",desc:"클럽·스위트룸 최대 20%, 스탠다드 최대 15% 할인 (아시아태평양 참가 호텔 공통).",period:"2026.06.25~09.30"}
+      ]},
+      {name:"베스트웨스턴 프리미어 인천에어포트",badge:"공항호텔",jsNotice:false,isNew:false,promos:[
+        {tags:["package"],title:"Flight Between Stay",desc:"비행 전후 짧은 시간 재충전할 수 있는 스테이 패키지, 상시 운영.",period:"2026.01~12"},
+        {tags:["package"],title:"Restaurant Credit 프로모션",desc:"파티오 레스토랑에서 사용 가능한 3만원 식음 크레딧 제공.",period:"2026.01~12"}
+      ]}
+    ],
+    prices:[
+      {hotel:"더 위크 앤 리조트",amount:"128,082원~",room:"오션뷰 스탠다드",channel:"트립어드바이저",na:false},
+      {hotel:"그랜드 하얏트 인천",amount:"161,000원~ ($115)",room:"스탠다드 킹",channel:"KAYAK",na:false},
+      {hotel:"베스트웨스턴 프리미어",amount:"75,600원~ ($54)",room:"수페리어 싱글",channel:"공식 홈페이지 기준가",na:false},
+      {hotel:"인스파이어 엔터테인먼트 리조트",amount:"200,200원~ ($143)",room:"디럭스 룸",channel:"KAYAK",na:false},
+      {hotel:"하얏트 리젠시 인천 파라다이스시티",amount:"353,000원~",room:"소닉 어드벤처 패키지(테마룸)",channel:"공식 홈페이지 패키지",na:false},
+      {hotel:"파라다이스시티 인천",amount:"245,000원~ ($175)",room:"스탠다드 룸",channel:"KAYAK",na:false}
+    ],
+    priceNote:"체크인 2026년 7월 13일(월) · 1박 · 성인2명 기준. KAYAK·트립어드바이저 메타서치 및 공식 홈페이지 패키지가 기준 최저 표시가입니다. 달러 표기 금액은 검색일 기준 약 1,400원/$ 환산 추정치이며, 실시간 환율·재고 변동으로 실제 결제 금액과 차이가 있을 수 있습니다.",
+    priceNa:false,
+    reviews:[],
+    reviewNote:"이번 수집 기간(7/6~7/12) 내 작성일이 확인되는 이비스 스타일 앰배서더 인천 에어포트의 신규 고객 후기(네이버 블로그·카페·스마트플레이스, 구글, OTA)는 발견되지 않았습니다. 다만 해당 호텔이 한국관광협회중앙회 등급평가에서 4성급으로 재인증받았다는 업계 소식이 있었습니다 (2026.07.08, mhns.co.kr)."
+  }
+];
+
+function renderWeek(idx){
+  const w=WEEKS_DATA[parseInt(idx)];
+  if(!w)return;
+  document.getElementById('metaBar').innerHTML=
+    `<div class="meta-item">📅 <strong>수집 기간</strong> ${w.range}</div>
+     <div class="meta-item">🗓️ <strong>발행일</strong> ${w.publishDate}</div>
+     <div class="meta-item">🔍 <strong>OTA 기준</strong> ${w.checkinDate} 체크인 1박</div>`;
+  document.getElementById('priceSubtitle').textContent=
+    `${w.checkinDate} 체크인 1박 기준`;
+
+  let newsHtml='';
+  w.newsSections.forEach(g=>{
+    newsHtml+=`<div class="news-group-header">${g.groupLabel}</div>`;
+    const isEventGroup = g.groupLabel.includes('호텔 이벤트');
+    if(isEventGroup){
+      newsHtml+=`<div class="event-card-grid">`;
+      g.items.forEach(item=>{
+        const srcParts=item.source.split(' · ');
+        const publisher=srcParts[0]||item.source;
+        const pubDate=srcParts[1]||'';
+        newsHtml+=`<div class="event-card">
+          <div class="event-card-headline">${item.url?`<a href="${item.url}" target="_blank" rel="noopener">${item.headline}</a>`:item.headline}</div>
+          <div class="event-card-meta"><span class="event-card-publisher">${publisher}</span>${pubDate?` <span class="event-card-date">· ${pubDate}</span>`:''}</div>
+          <div class="event-card-summary">${item.summary}</div>
+        </div>`;
+      });
+      newsHtml+=`</div>`;
+    } else {
+      g.items.forEach(item=>{
+        newsHtml+=`
+          <div class="news-item">
+            <div class="news-emoji">${item.emoji}</div>
+            <div>
+              <div class="news-cat">${item.cat}</div>
+              <div class="news-headline">${item.url?`<a href="${item.url}" target="_blank" rel="noopener">${item.headline}</a>`:item.headline}</div>
+              <div class="news-source">📰 ${item.source}</div>
+              <div class="news-summary">${item.summary}</div>
+            </div>
+          </div>`;
+      });
+    }
+  });
+  document.getElementById('newsSection').innerHTML=newsHtml;
+
+  const tagMap={
+    sale:['tag-sale','특가'],
+    package:['tag-package','패키지'],
+    event:['tag-event','이벤트'],
+    new:['tag-new','NEW']
+  };
+  let promoHtml='';
+  w.hotels.forEach(h=>{
+    let promoContent='';
+    if(h.promos&&h.promos.length){
+      h.promos.forEach((p,i)=>{
+        const tags=p.tags.map(t=>`<span class="promo-tag ${tagMap[t][0]}">${tagMap[t][1]}</span>`).join('');
+        promoContent+=`<div style="margin-bottom:${i<h.promos.length-1?'10px':'0'};${i<h.promos.length-1?'padding-bottom:10px;border-bottom:1px dashed var(--gray-100);':''}">
+          <div>${tags}</div>
+          <div class="promo-title">${p.title}</div>
+          <div class="promo-desc">${p.desc}</div>
+          ${p.period?`<div class="promo-period">📅 ${p.period}</div>`:''}
+        </div>`;
+      });
+    }else{promoContent='<div class="no-promo">이번 주 신규 프로모션 없음</div>';}
+    promoHtml+=`<div class="hotel-card">
+      <div class="hotel-name">${h.name}<span class="hotel-name-badge">${h.badge}</span></div>
+      ${promoContent}
+    </div>`;
+  });
+  document.getElementById('promoSection').innerHTML=promoHtml;
+
+  let priceHtml='';
+  if(w.priceNa){
+    priceHtml=w.prices.map(p=>`<tr><td data-label="호텔"><strong>${p.hotel}</strong></td><td colspan="3"><span class="price-na">조회 불가 — 과거 날짜 (체크인 기준일 경과)</span></td></tr>`).join('');
+  }else{
+    priceHtml=w.prices.map(p=>`<tr>
+      <td data-label="호텔"><strong>${p.hotel}</strong></td>
+      <td data-label="최저가 / 객실">${p.na?'<span class="price-na">조회 불가 (OTA 미등록)</span>':`<div class="price-amount">${p.amount}</div><div class="price-room">🛏️ ${p.room}</div>`}</td>
+      <td class="price-source" data-label="채널">${p.na?'—':p.channel||p.source}</td>
+    </tr>`).join('');
+  }
+  document.getElementById('priceTableBody').innerHTML=priceHtml;
+  document.getElementById('otaNote').textContent=w.priceNote;
+
+}
+
+document.getElementById('weekSelect').addEventListener('change', function(){ renderWeek(this.value); });
+renderWeek(document.getElementById('weekSelect').value);
+
+const MOBILE_LINK_URL = "https://ibis-incheon-report.netlify.app";
+
+function copyMobileLink(){
+  const toast = document.getElementById('copyToast');
+  const label = document.getElementById('mobileShareLabel');
+  const showToast = (ok) => {
+    toast.textContent = ok ? "링크가 복사되었습니다 ✓" : "복사 실패 — 길게 눌러 직접 복사해주세요";
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2200);
+  };
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(MOBILE_LINK_URL).then(() => showToast(true)).catch(() => fallbackCopy());
+  } else {
+    fallbackCopy();
+  }
+  function fallbackCopy(){
+    try {
+      const ta = document.createElement('textarea');
+      ta.value = MOBILE_LINK_URL;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.focus();
+      ta.select();
+      const ok = document.execCommand('copy');
+      document.body.removeChild(ta);
+      showToast(ok);
+    } catch (e) {
+      showToast(false);
+    }
+  }
+}
+</script>
+</body>
+</html>
