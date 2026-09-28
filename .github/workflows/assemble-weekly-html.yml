@@ -1,0 +1,41 @@
+name: Assemble weekly report HTML
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'weekly-html-parts/**'
+      - '.github/workflows/assemble-weekly-html.yml'
+permissions:
+  contents: write
+jobs:
+  assemble:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Assemble when all parts exist
+        shell: bash
+        run: |
+          set -euo pipefail
+          expected=9
+          count=$(find weekly-html-parts -maxdepth 1 -type f -name 'chunk-*' | wc -l)
+          if [ "$count" -ne "$expected" ]; then
+            echo "Waiting for all parts: $count/$expected"
+            exit 0
+          fi
+          cat weekly-html-parts/chunk-* > index.html
+          node - <<'JS'
+          const fs=require('fs');
+          const h=fs.readFileSync('index.html','utf8');
+          if(!h.includes('2026년 9월 3주차') || !h.includes('2026년 9월 4주차') || !h.includes('value="15" selected')) process.exit(1);
+          const js=h.match(/<script>([\s\S]*)<\/script>/)[1];
+          const i=js.indexOf('function renderWeek');
+          const W=new Function(js.slice(0,i)+';return WEEKS_DATA;')();
+          if(W.length!==16 || W.at(-2).label!=='2026년 9월 3주차' || W.at(-1).label!=='2026년 9월 4주차') process.exit(1);
+          console.log('Validated weeks:',W.length);
+          JS
+          rm -rf weekly-html-parts
+          git config user.name 'weekly-report-bot'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html weekly-html-parts
+          git commit -m 'Update weekly report through 2026-09-27 [weekly-report-bot]'
+          git push
